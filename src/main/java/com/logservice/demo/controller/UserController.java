@@ -4,9 +4,12 @@ import com.logservice.demo.annotation.AttrLogEvent;
 import com.logservice.demo.annotation.Attribute;
 import com.logservice.demo.annotation.ObjLogEvent;
 import com.logservice.demo.dto.UserDTO;
+import com.logservice.demo.dto.UserGroupDTO;
 import com.logservice.demo.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/User")
@@ -17,11 +20,36 @@ public class UserController {
     @ObjLogEvent(operation = "Add",type = "User",attributes = {
             @Attribute(key = "userId",name = "用户Id"),
             @Attribute(key = "userName",name = "用户名"),
-            @Attribute(key = "password",name = "用户密码")
+            @Attribute(key = "password",name = "用户密码"),
+            @Attribute(key = "age",name="年龄")
     })
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     public String addUser(@RequestBody UserDTO userDTO){
         userService.addUser(userDTO);
+        return "Success";
+    }
+
+    @ObjLogEvent(operation = "批量添加",type = "User",attributes = {
+            @Attribute(key = "userId",name = "用户Id"),
+            @Attribute(key = "userName",name = "用户名"),
+            @Attribute(key = "password",name = "用户密码"),
+            @Attribute(key = "age",name="年龄")
+    })
+    @RequestMapping(value = "/addMultiUser", method = RequestMethod.POST)
+    public String addMultiUser(@RequestBody List<UserDTO> userDTO){
+        return "Success";
+    }
+
+    @ObjLogEvent(operation = "Add",type = "User",attributes = {
+            @Attribute(key="groupId",name="用户组名"),
+            @Attribute(key = "users",name = "用户组"),
+            @Attribute(key = "userId",name = "用户Id"),
+            @Attribute(key = "userName",name = "用户名"),
+            @Attribute(key = "password",name = "用户密码"),
+            @Attribute(key = "age",name="年龄")
+    })
+    @RequestMapping(value = "/addUserGroup", method = RequestMethod.POST)
+    public String addUserAndGroup(@RequestBody UserGroupDTO userGroupDTO){
         return "Success";
     }
 

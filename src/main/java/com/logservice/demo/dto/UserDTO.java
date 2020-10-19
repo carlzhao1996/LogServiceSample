@@ -7,6 +7,8 @@ public class UserDTO {
 
     String password;
 
+    Integer age;
+
     public String getUserId() {
         return userId;
     }
@@ -29,5 +31,13 @@ public class UserDTO {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }
