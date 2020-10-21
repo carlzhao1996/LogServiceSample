@@ -37,7 +37,7 @@ public class ObjLogEventIntercepter {
 
         Object[] args = joinPoint.getArgs();
         JSONArray jsonArray = (JSONArray) JSON.toJSON(args);
-        StringBuffer inputDataBuffer = new StringBuffer().append(methodAnnotation.operation()+"信息：");
+        StringBuffer inputDataBuffer = new StringBuffer();
 
         if(jsonArray.get(0) instanceof JSONArray){
             JSONArray jsonArrayListData = (JSONArray) jsonArray.get(0);
@@ -64,18 +64,30 @@ public class ObjLogEventIntercepter {
                     String listKey = keyMap.get(key);
                     attributeBuffer.append(listKey+"=");
                     attributeBuffer.append("{");
-                    for(int i=0,size = jsonArrayData.size();i<size;i++){
+
+//                    System.out.println(jsonArrayData.get(0).getClass().getName());
+                    //若是非对象数组
+                    if (!(jsonArrayData.get(0) instanceof JSONObject)){
                         StringBuffer dataBuffer = new StringBuffer();
-                        for(String key1 : keyMap.keySet()){
-                            String attributeKey = keyMap.get(key1);
-                            String attributeVal = jsonArrayData.getJSONObject(i).getString(key1);
-                            if(attributeVal!=null) {
-                                String attribute = attributeKey + ":" + attributeVal + ";";
-                                dataBuffer.append(attribute);
-                            }
+                        for(int i=0,size = jsonArrayData.size();i<size;i++){
+                            String Value = jsonArrayData.get(i).toString()+";";
+                            dataBuffer.append(Value);
                         }
-                        String objResult = "("+dataBuffer+")";
-                        attributeBuffer.append(objResult);
+                        attributeBuffer.append(dataBuffer);
+                    }else {
+                        for(int i=0,size = jsonArrayData.size();i<size;i++){
+                            StringBuffer dataBuffer = new StringBuffer();
+                            for(String key1 : keyMap.keySet()){
+                                String attributeKey = keyMap.get(key1);
+                                String attributeVal = jsonArrayData.getJSONObject(i).getString(key1);
+                                if(attributeVal!=null) {
+                                    String attribute = attributeKey + ":" + attributeVal + ";";
+                                    dataBuffer.append(attribute);
+                                }
+                            }
+                            String objResult = "("+dataBuffer+")";
+                            attributeBuffer.append(objResult);
+                        }
                     }
                     attributeBuffer.append("}");
                     inputDataBuffer.append(attributeBuffer);
