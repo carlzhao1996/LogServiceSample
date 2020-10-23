@@ -48,13 +48,14 @@ public class AttrLogEventIntercepter {
             keyMap.put(attribute.key(),attribute.name());
         }
 
-        StringBuffer inputDataBuffer = new StringBuffer().append(methodAnnotation.operation()+"信息：");
+        StringBuffer inputDataBuffer = new StringBuffer();
+        JSONObject jsonObject = new JSONObject();
         inputArgsMap.forEach((inputArgKey,inputArgVal)->{
             String attributeKey = keyMap.get(inputArgKey);
             String attributeVal = inputArgVal;
-            String attribute = attributeKey+":"+attributeVal+";";
-            inputDataBuffer.append(attribute);
+            jsonObject.put(attributeKey,attributeVal);
         });
+        inputDataBuffer.append(jsonObject.toJSONString());
 
         JSONObject json = new JSONObject();
         json.put("operation",methodAnnotation.operation());

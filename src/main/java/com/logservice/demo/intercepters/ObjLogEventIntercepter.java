@@ -41,65 +41,65 @@ public class ObjLogEventIntercepter {
 
         if(jsonArray.get(0) instanceof JSONArray){
             JSONArray jsonArrayListData = (JSONArray) jsonArray.get(0);
-            StringBuffer attributeBuffer = new StringBuffer();
+            JSONArray resultArray = new JSONArray();
             for(int i=0,size = jsonArrayListData.size();i<size;i++){
-                StringBuffer dataBuffer = new StringBuffer();
+                JSONObject jsonObject = new JSONObject();
                 for(String key : keyMap.keySet()){
                     String attributeKey = keyMap.get(key);
                     String attributeVal = jsonArrayListData.getJSONObject(i).getString(key);
-                    String attribute = attributeKey+":"+attributeVal+";";
-                    dataBuffer.append(attribute);
+                    jsonObject.put(attributeKey,attributeVal);
                 }
-                String objResult = "("+dataBuffer+")";
-                attributeBuffer.append(objResult);
+               resultArray.add(jsonObject);
             }
-            inputDataBuffer.append(attributeBuffer);
+            inputDataBuffer.append(resultArray.toJSONString());
         }
         else if(jsonArray.get(0) instanceof JSONObject){
+            JSONObject jsonObject = new JSONObject();
             for (String key : keyMap.keySet()){
                 if (((JSONObject) jsonArray.get(0)).get(key) instanceof JSONArray){
+
                     //执行遍历json array 操作
                     JSONArray jsonArrayData = (JSONArray) ((JSONObject) jsonArray.get(0)).get(key);
-                    StringBuffer attributeBuffer = new StringBuffer();
-                    String listKey = keyMap.get(key);
-                    attributeBuffer.append(listKey+"=");
-                    attributeBuffer.append("{");
+                    if (jsonArrayData.size()==0){
+                        continue;
+                    }
 
-//                    System.out.println(jsonArrayData.get(0).getClass().getName());
+                    String listKey = keyMap.get(key);
+
                     //若是非对象数组
                     if (!(jsonArrayData.get(0) instanceof JSONObject)){
-                        StringBuffer dataBuffer = new StringBuffer();
+                        JSONArray jsonArray1 = new JSONArray();
                         for(int i=0,size = jsonArrayData.size();i<size;i++){
-                            String Value = jsonArrayData.get(i).toString()+";";
-                            dataBuffer.append(Value);
+                            String Value = jsonArrayData.get(i).toString();
+                            jsonArray1.add(Value);
                         }
-                        attributeBuffer.append(dataBuffer);
-                    }else {
+                        jsonObject.put(listKey,jsonArray1);
+                    }else {//对象数组
+                        JSONArray jsonArray1 = new JSONArray();
                         for(int i=0,size = jsonArrayData.size();i<size;i++){
-                            StringBuffer dataBuffer = new StringBuffer();
+                            JSONObject jsonObject1 = new JSONObject();
                             for(String key1 : keyMap.keySet()){
                                 String attributeKey = keyMap.get(key1);
                                 String attributeVal = jsonArrayData.getJSONObject(i).getString(key1);
                                 if(attributeVal!=null) {
-                                    String attribute = attributeKey + ":" + attributeVal + ";";
-                                    dataBuffer.append(attribute);
+//                                    String attribute = attributeKey + ":" + attributeVal + ";";
+                                    jsonObject1.put(attributeKey,attributeVal);
                                 }
                             }
-                            String objResult = "("+dataBuffer+")";
-                            attributeBuffer.append(objResult);
+                            jsonArray1.add(jsonObject1);
                         }
+                        jsonObject.put(listKey,jsonArray1);
                     }
-                    attributeBuffer.append("}");
-                    inputDataBuffer.append(attributeBuffer);
+
                 }else {
                     String attributeKey = keyMap.get(key);
                     String attributeVal = jsonArray.getJSONObject(0).getString(key);
                     if(attributeVal!=null) {
-                        String attribute = attributeKey+":"+attributeVal+";";
-                        inputDataBuffer.append(attribute);
+                        jsonObject.put(attributeKey,attributeVal);
                     }
                 }
             }
+            inputDataBuffer.append(jsonObject.toJSONString());
         }
 
 

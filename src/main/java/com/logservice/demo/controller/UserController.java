@@ -23,7 +23,7 @@ public class UserController {
             @Attribute(key = "userId",name = "用户Id"),
             @Attribute(key = "userName",name = "用户名"),
             @Attribute(key = "password",name = "用户密码"),
-//            @Attribute(key = "age",name="年龄")
+            @Attribute(key = "age",name="年龄")
     })
     @RequestMapping(value = "/addUser", method = RequestMethod.POST)
     public String addUser(@RequestBody UserDTO userDTO){
@@ -84,7 +84,7 @@ public class UserController {
             @Attribute(key = "userName",name = "用户名")
     })
     @RequestMapping(value = "/getUser", method = RequestMethod.GET)
-    public UserDTO getUser(@RequestParam String id){
+    public UserDTO getUser(@RequestParam String id,@RequestParam String userName){
         UserDTO user = userService.getUser(id);
         return user;
     }
