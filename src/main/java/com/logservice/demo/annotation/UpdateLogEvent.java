@@ -14,8 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface UpdateLogEvent {
     String Operation() default "Update";
+    String OidKey();
     String type();
-    String updateKey(); //更新键 e.g. Id
     Class clazz();
-    Attribute [] attributes();
 }

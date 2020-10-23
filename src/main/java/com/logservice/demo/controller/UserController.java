@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.logservice.demo.annotation.AttrLogEvent;
 import com.logservice.demo.annotation.Attribute;
 import com.logservice.demo.annotation.ObjLogEvent;
+import com.logservice.demo.annotation.UpdateLogEvent;
 import com.logservice.demo.dto.UserDTO;
 import com.logservice.demo.dto.UserGroupDTO;
 import com.logservice.demo.dto.UserTagDTO;
+import com.logservice.demo.operation.UpdateOperation;
 import com.logservice.demo.service.interf.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -99,7 +101,7 @@ public class UserController {
     }
 
 
-
+    @UpdateLogEvent(type = "User",clazz = UpdateOperation.class, OidKey = "userId")
     @RequestMapping(value = "/UpdateUser",method = RequestMethod.POST)
     public String updateUser(@RequestBody UserDTO userDTO){
         return "Success";
